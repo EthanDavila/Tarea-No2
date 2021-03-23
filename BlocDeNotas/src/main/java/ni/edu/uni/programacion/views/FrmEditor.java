@@ -25,6 +25,7 @@ public class FrmEditor extends javax.swing.JFrame {
     private BufferedWriter BW;
     private BufferedReader BR;
     private PrintWriter PW;
+    private FileOutputStream Salida;
 
     /**
      * Creates new form FrmEditor
@@ -51,9 +52,13 @@ public class FrmEditor extends javax.swing.JFrame {
                 mniNew = new javax.swing.JMenuItem();
                 mniOpen = new javax.swing.JMenuItem();
                 mniSave = new javax.swing.JMenuItem();
+                mniSaveHow = new javax.swing.JMenuItem();
                 mniExit = new javax.swing.JMenuItem();
                 jMenu2 = new javax.swing.JMenu();
                 mniFuente = new javax.swing.JMenuItem();
+
+                jFontChooser1.setForeground(java.awt.Color.white);
+                jFontChooser1.setToolTipText("");
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
                 setTitle("Editor de Texto");
@@ -105,6 +110,16 @@ public class FrmEditor extends javax.swing.JFrame {
                         }
                 });
                 jMenu1.add(mniSave);
+
+                mniSaveHow.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+                mniSaveHow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/shingeki-no-kyojin-mikasa-ackerman-render-by-rosalynnbelle-shingeki-no-kyojin-mikasa-render-11563050043q8fmvsbwne (1).png"))); // NOI18N
+                mniSaveHow.setText("Guardar Como");
+                mniSaveHow.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                mniSaveHowActionPerformed(evt);
+                        }
+                });
+                jMenu1.add(mniSaveHow);
 
                 mniExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
                 mniExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/57feee38c69d71acf8fdcee1e158d84a (1).png"))); // NOI18N
@@ -209,6 +224,40 @@ public class FrmEditor extends javax.swing.JFrame {
 		pnlTextEditor.getTextPaneEditor().setFont(fc.getSelectedFont());
         }//GEN-LAST:event_mniFuenteActionPerformed
 
+        private void mniSaveHowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSaveHowActionPerformed
+                PnlTextEditor pnlTextEditor = (PnlTextEditor) tbpContent.getSelectedComponent();
+		if (FC.showDialog(null, "Guardar") == JFileChooser.APPROVE_OPTION){
+			Archivo = FC.getSelectedFile();
+			if (Archivo.getName().endsWith("txt")){
+				String Txt = pnlTextEditor.getTextPaneEditor().getText();
+				String Mensaje = GuardarDocumento(Archivo, Txt);
+				if (Mensaje != null){
+					JOptionPane.showMessageDialog(null, Mensaje);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Archivo no Compatible");
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Archivo no guardado");
+			}
+			int index = tbpContent.getSelectedIndex();
+			tbpContent.remove(index);
+		}
+        }//GEN-LAST:event_mniSaveHowActionPerformed
+
+	private String GuardarDocumento(File Archivo, String Texto){
+		String Mensaje = null;
+		try{
+			Salida = new FileOutputStream(Archivo);
+			byte[] ByteTxt= Texto.getBytes();
+			Salida.write(ByteTxt);
+			Mensaje = "Archivo guardado con éxito";
+		}
+		catch(Exception e){
+		}
+		return Mensaje;
+	}
      /**
      * @param args the command line arguments
      */
@@ -256,6 +305,7 @@ public class FrmEditor extends javax.swing.JFrame {
         private javax.swing.JMenuItem mniNew;
         private javax.swing.JMenuItem mniOpen;
         private javax.swing.JMenuItem mniSave;
+        private javax.swing.JMenuItem mniSaveHow;
         private javax.swing.JTabbedPane tbpContent;
         // End of variables declaration//GEN-END:variables
 }
